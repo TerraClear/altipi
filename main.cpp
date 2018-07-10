@@ -14,15 +14,26 @@
 #include <cstdlib>
 #include <iostream>
 
+#include <wiringPi.h>
+
 using namespace std;
 
-/*
- * 
- */
-int main(int argc, char** argv) {
+#define GPIO4 7
 
-    std::cout << "pi test 1" << std::endl;
-    
-    return 0;
+int main(int argc, char** argv) 
+{
+	//setup wiringPi
+    	wiringPiSetup();
+
+	//set IO pin state
+	pinMode(GPIO4, OUTPUT);
+
+	//enable LED
+	digitalWrite(GPIO4, HIGH);
+	
+	printf("done..\n");
+
+    	return 0;
+
 }
 
