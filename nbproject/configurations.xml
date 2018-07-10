@@ -44,6 +44,7 @@
           <linkerLibItems>
             <linkerLibLibItem>wiringPi</linkerLibLibItem>
           </linkerLibItems>
+          <commandLine>-pthread -lwiringPi -lm -lrt -lcrypt</commandLine>
         </linkerTool>
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">

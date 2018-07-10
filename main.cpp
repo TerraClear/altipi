@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 	//enable LED
 	digitalWrite(GPIO4, HIGH);
 	
-	printf("done..\n");
+	std::cout << "Enabled GPIO 4 " << std::endl;
 
     	return 0;
 
