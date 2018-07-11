@@ -15,10 +15,9 @@
 #include <iostream>
 
 #include <wiringPi.h>
+#include "pipinmap.hpp"
 
 using namespace std;
-
-#define GPIO4 7
 
 int main(int argc, char** argv) 
 {
@@ -26,12 +25,12 @@ int main(int argc, char** argv)
     	wiringPiSetup();
 
 	//set IO pin state
-	pinMode(GPIO4, OUTPUT);
+	pinMode(GPIO_18, OUTPUT);
 
 	//enable LED
-	digitalWrite(GPIO4, HIGH);
+	digitalWrite(GPIO_18, HIGH);
 	
-	std::cout << "Enabled GPIO 4 " << std::endl;
+	std::cout << "Enabled GPIO 18 " << std::endl;
 
     	return 0;
 

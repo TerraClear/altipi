@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>pipinmap.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -49,6 +50,8 @@
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
+      <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -71,6 +74,8 @@
         </asmTool>
       </compileType>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
