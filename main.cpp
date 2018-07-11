@@ -13,21 +13,40 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <unistd.h>
 
 #include <wiringPi.h>
-#include <unistd.h>
 #include "pipinmap.hpp"
 
-using namespace std;
+#include "../tcpserial/xkserial.hpp"
+
+xk::xkserial _serial1;
 
 void interrupttest()
 {
- 
     std::cout << "ISR Called!!" << std::endl;
+
+    //write client msg to serial port..
+    _serial1.writeString("?LD\r\n", 500);
+
+    std::string retstr = _serial1.readstring(32, 500);
+    
+    std::cout << retstr;
 }
 
 int main(int argc, char** argv) 
 {
+        std::string serial_path = "/dev/ttyAMA0";
+
+        //if port is supplied use supplied path..
+        if (argc > 1)
+        {
+           serial_path = argv[1];
+        }
+
+        _serial1.open(serial_path, xk::BAUD_115200);
+
+    
 	//setup wiringPi in GPIO pin numbering mode..
     	wiringPiSetupGpio();
 
