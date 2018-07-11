@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/46522b86/xkerror.o \
 	${OBJECTDIR}/_ext/46522b86/xkserial.o \
 	${OBJECTDIR}/main.o
 
@@ -53,7 +54,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-Wl,-rpath,'..\tcpserial' -lwiringPi
+LDLIBSOPTIONS=-Wl,-rpath,'..\tcpserial' -lwiringPi `pkg-config --libs libserialport`  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -63,20 +64,25 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipi: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipi ${OBJECTFILES} ${LDLIBSOPTIONS} -pthread -lwiringPi -lm -lrt -lcrypt
 
+${OBJECTDIR}/_ext/46522b86/xkerror.o: ../tcpserial/xkerror.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
+	${RM} "$@.d"
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkerror.o ../tcpserial/xkerror.cpp
+
 ${OBJECTDIR}/_ext/46522b86/xkserial.o: ../tcpserial/xkserial.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkserial.o ../tcpserial/xkserial.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkserial.o ../tcpserial/xkserial.cpp
 
 ${OBJECTDIR}/_ext/46522b86/xkserial.hpp.gch: ../tcpserial/xkserial.hpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o "$@" ../tcpserial/xkserial.hpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o "$@" ../tcpserial/xkserial.hpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 # Subprojects
 .build-subprojects:

@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>pipinmap.hpp</itemPath>
+      <itemPath>../tcpserial/xkerror.hpp</itemPath>
       <itemPath>../tcpserial/xkserial.hpp</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -15,6 +16,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>main.cpp</itemPath>
+      <itemPath>../tcpserial/xkerror.cpp</itemPath>
       <itemPath>../tcpserial/xkserial.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -49,10 +51,15 @@
           </linkerDynSerch>
           <linkerLibItems>
             <linkerLibLibItem>wiringPi</linkerLibLibItem>
+            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
           </linkerLibItems>
           <commandLine>-pthread -lwiringPi -lm -lrt -lcrypt</commandLine>
         </linkerTool>
       </compileType>
+      <item path="../tcpserial/xkerror.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../tcpserial/xkerror.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../tcpserial/xkserial.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../tcpserial/xkserial.hpp" ex="false" tool="1" flavor2="0">
@@ -82,6 +89,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="../tcpserial/xkerror.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../tcpserial/xkerror.hpp" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="../tcpserial/xkserial.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../tcpserial/xkserial.hpp" ex="false" tool="3" flavor2="0">

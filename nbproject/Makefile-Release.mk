@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/_ext/46522b86/xkerror.o \
 	${OBJECTDIR}/_ext/46522b86/xkserial.o \
 	${OBJECTDIR}/main.o
 
@@ -62,6 +63,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipi: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipi ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/_ext/46522b86/xkerror.o: ../tcpserial/xkerror.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkerror.o ../tcpserial/xkerror.cpp
 
 ${OBJECTDIR}/_ext/46522b86/xkserial.o: ../tcpserial/xkserial.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
