@@ -45,7 +45,7 @@ int main(int argc, char** argv)
             toggle = !toggle;
             digitalWrite(GPIO_18, toggle);
 
-
+            std::cout << "." ;
             usleep(500000);        
         }
 
