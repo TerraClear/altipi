@@ -19,6 +19,12 @@
 
 using namespace std;
 
+void interrupttest()
+{
+ 
+    std::cout << "ISR Called!!" << std::endl;
+}
+
 int main(int argc, char** argv) 
 {
 	//setup wiringPi in GPIO pin numbering mode..
@@ -26,6 +32,10 @@ int main(int argc, char** argv)
 
 	//set IO pin state
 	pinMode(GPIO_18, OUTPUT);
+	pinMode(GPIO_23, INPUT);
+
+        wiringPiISR(GPIO_23, INT_EDGE_FALLING, &interrupttest);
+        
 
 	//enable LED
 	digitalWrite(GPIO_18, HIGH);
