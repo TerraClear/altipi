@@ -15,6 +15,7 @@
 #include <iostream>
 
 #include <wiringPi.h>
+#include <unistd.h>
 #include "pipinmap.hpp"
 
 using namespace std;
@@ -36,12 +37,19 @@ int main(int argc, char** argv)
 
         wiringPiISR(GPIO_23, INT_EDGE_FALLING, &interrupttest);
         
+        bool toggle = false;
 
-	//enable LED
-	digitalWrite(GPIO_18, HIGH);
-	
-	std::cout << "Enabled GPIO 18 " << std::endl;
+        while(1)
+        {
+            //enable LED
+            toggle = !toggle;
+            digitalWrite(GPIO_18, toggle);
 
+
+            usleep(500000);        
+        }
+
+       
     	return 0;
 
 }
