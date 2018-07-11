@@ -21,8 +21,8 @@ using namespace std;
 
 int main(int argc, char** argv) 
 {
-	//setup wiringPi
-    	wiringPiSetup();
+	//setup wiringPi in GPIO pin numbering mode..
+    	wiringPiSetupGpio();
 
 	//set IO pin state
 	pinMode(GPIO_18, OUTPUT);
