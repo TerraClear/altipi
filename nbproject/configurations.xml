@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>pipinmap.hpp</itemPath>
+      <itemPath>wiringPi_stub.h</itemPath>
       <itemPath>../tcpserial/xkerror.hpp</itemPath>
       <itemPath>../tcpserial/xkserial.hpp</itemPath>
     </logicalFolder>
@@ -31,6 +32,7 @@
       <itemPath>.gitignore</itemPath>
       <itemPath>Makefile</itemPath>
       <itemPath>README.md</itemPath>
+      <itemPath>appsettings.json</itemPath>
     </logicalFolder>
   </logicalFolder>
   <projectmakefile>Makefile</projectmakefile>
@@ -68,6 +70,8 @@
       </item>
       <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="wiringPi_stub.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="Release" type="1">
       <toolsSet>
@@ -100,6 +104,83 @@
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="wiringPi_stub.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_Pi" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+        </ccTool>
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>..\tcpserial</pElem>
+          </linkerDynSerch>
+          <linkerLibItems>
+            <linkerLibLibItem>wiringPi</linkerLibLibItem>
+            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs jsoncpp`</linkerOptionItem>
+          </linkerLibItems>
+          <commandLine>-pthread -lwiringPi -lm -lrt -lcrypt</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="../tcpserial/xkerror.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../tcpserial/xkerror.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../tcpserial/xkserial.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../tcpserial/xkserial.hpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="wiringPi_stub.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug_OSX" type="1">
+      <toolsSet>
+        <compilerSet>CLang|CLang</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <incDir>
+            <pElem>/usr/local/Cellar/jsoncpp/1.8.4/include</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerDynSerch>
+            <pElem>..\tcpserial</pElem>
+          </linkerDynSerch>
+          <linkerLibItems>
+            <linkerLibLibItem>serialport</linkerLibLibItem>
+            <linkerLibLibItem>jsoncpp</linkerLibLibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../tcpserial/xkerror.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../tcpserial/xkerror.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../tcpserial/xkserial.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../tcpserial/xkserial.hpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="wiringPi_stub.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

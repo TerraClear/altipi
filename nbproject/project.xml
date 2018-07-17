@@ -6,7 +6,7 @@
             <name>altipi</name>
             <c-extensions/>
             <cpp-extensions>cpp</cpp-extensions>
-            <header-extensions>hpp</header-extensions>
+            <header-extensions>h,hpp</header-extensions>
             <sourceEncoding>UTF-8</sourceEncoding>
             <make-dep-projects/>
             <sourceRootList/>
@@ -17,6 +17,14 @@
                 </confElem>
                 <confElem>
                     <name>Release</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Debug_Pi</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Debug_OSX</name>
                     <type>1</type>
                 </confElem>
             </confList>
