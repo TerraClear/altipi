@@ -37,7 +37,9 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/46522b86/xkerror.o \
 	${OBJECTDIR}/_ext/46522b86/xkserial.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/_ext/46522b86/xkthread.o \
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/xkthread_serialrx.o
 
 
 # C Compiler Flags
@@ -74,10 +76,20 @@ ${OBJECTDIR}/_ext/46522b86/xkserial.o: ../tcpserial/xkserial.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkserial.o ../tcpserial/xkserial.cpp
 
+${OBJECTDIR}/_ext/46522b86/xkthread.o: ../tcpserial/xkthread.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkthread.o ../tcpserial/xkthread.cpp
+
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/xkthread_serialrx.o: xkthread_serialrx.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/xkthread_serialrx.o xkthread_serialrx.cpp
 
 # Subprojects
 .build-subprojects:
