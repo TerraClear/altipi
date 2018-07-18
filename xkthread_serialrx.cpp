@@ -1,15 +1,23 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   xkthread_serialrx.cpp
- * Author: koos
+ * SF/11C SerialPort Comms & Parsing Thread
+ * Copyright (C) 2017 Jacobus du Preez / kdupreez@hotmail.com
  * 
- * Created on July 17, 2018, 10:39 AM
- */
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
+
+#include <unistd.h>
 
 #include "xkthread_serialrx.hpp"
 
@@ -42,7 +50,11 @@ void xkthread_serialrx::create_request(uint32_t seqno, uint32_t millis_elapsed)
     this->mutex_lock();
         //save request to queue
         _entry_queue.push(entry);
-   
+        
+        //check if serial ready.. if not, try reset..
+        if (!_altimeter_ok)
+            _serial1.writeString(_Request_Info, _Serial_Timeout);
+        
         //make request via serialport, response will come back async and pop queue
         _serial1.writeString(_Request_Distance, _Serial_Timeout);
         
@@ -91,15 +103,18 @@ void xkthread_serialrx::processMessage(std::string serialmsg)
            {
                 std::cout << "Distance: " << serialmsg ;
                 
-               //pop FIFO item.
+               //get FIFO item.
                altitude_entry entry = _entry_queue.back();
-               _entry_queue.pop();
 
-               //write to file
+               //construct file entry..
                std::ostringstream strstrm;
                strstrm <<  entry.seqno << "," << entry.millis_elapsed << "," << serialmsg.substr(_Response_Distance.length(), 4) << std::endl;
                
+               //append altimetry data to file..
                appendFile(_file_path, strstrm.str());
+
+               //pop entry off queue after sucessfull write.
+                _entry_queue.pop();
 
            }
        this->mutex_unlock();
