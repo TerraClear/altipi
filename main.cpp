@@ -23,6 +23,7 @@
 #include <chrono>
 
 #include <wiringPi.h>
+#include "pipinmap.hpp"
 
 #include "xkthread_serialrx.hpp"
 
