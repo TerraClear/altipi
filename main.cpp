@@ -22,11 +22,9 @@
 #include <fstream>
 #include <chrono>
 
-#include <jsoncpp/json/json.h>
 #include <wiringPi.h>
 #include "wiringPi_stub.h"
 
-#include "pipinmap.hpp"
 #include "xkthread_serialrx.hpp"
 
 //Pins for LED's and Trigger line.

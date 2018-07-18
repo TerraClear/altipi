@@ -56,7 +56,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-Wl,-rpath,'..\tcpserial' -lwiringPi `pkg-config --libs libserialport` `pkg-config --libs jsoncpp`  
+LDLIBSOPTIONS=-Wl,-rpath,'..\tcpserial' -lwiringPi `pkg-config --libs libserialport`  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -69,32 +69,32 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipi: ${OBJECTFILES}
 ${OBJECTDIR}/_ext/46522b86/xkerror.o: ../tcpserial/xkerror.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkerror.o ../tcpserial/xkerror.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkerror.o ../tcpserial/xkerror.cpp
 
 ${OBJECTDIR}/_ext/46522b86/xkserial.o: ../tcpserial/xkserial.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkserial.o ../tcpserial/xkserial.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkserial.o ../tcpserial/xkserial.cpp
 
 ${OBJECTDIR}/_ext/46522b86/xkserial.hpp.gch: ../tcpserial/xkserial.hpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o "$@" ../tcpserial/xkserial.hpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o "$@" ../tcpserial/xkserial.hpp
 
 ${OBJECTDIR}/_ext/46522b86/xkthread.o: ../tcpserial/xkthread.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkthread.o ../tcpserial/xkthread.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkthread.o ../tcpserial/xkthread.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
 ${OBJECTDIR}/xkthread_serialrx.o: xkthread_serialrx.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` `pkg-config --cflags jsoncpp` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/xkthread_serialrx.o xkthread_serialrx.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/xkthread_serialrx.o xkthread_serialrx.cpp
 
 # Subprojects
 .build-subprojects:

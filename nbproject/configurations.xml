@@ -139,7 +139,6 @@
           <linkerLibItems>
             <linkerLibLibItem>wiringPi</linkerLibLibItem>
             <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
-            <linkerOptionItem>`pkg-config --libs jsoncpp`</linkerOptionItem>
           </linkerLibItems>
           <commandLine>-pthread -lwiringPi -lm -lrt -lcrypt</commandLine>
         </linkerTool>
