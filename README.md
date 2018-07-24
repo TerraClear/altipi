@@ -5,3 +5,7 @@ Basic Altimeter logger for SF11/C laser range finder.
 - Trigger on specified pin interrupt 
 - Retrieve Altitude via serial port
 - Log Altitudes.
+
+
+REQUIRES
+- tcpserial
