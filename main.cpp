@@ -1,6 +1,6 @@
 /*
  * This application measures distances with SF11/C Lidar.
- * Copyright (C) 2017 Jacobus du Preez / kdupreez@hotmail.com
+ * Copyright (C) 2017 TerraClear, Inc.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@
 
 //clock to measure time elapsed between triggers.
 std::chrono::steady_clock::time_point _lastmeasure;
+uint32_t elapse_tof = 0;
 
 //serial thread
 xkthread_serialrx* pThreadRX  = nullptr;
@@ -57,10 +58,16 @@ void trigger_pulse()
 
         //reset millis for 1st entry
         if (_seqno == 0)
+        {
             millicount = 0;
-
+            elapse_tof = 0;
+        }
+        else
+        {
+            elapse_tof += millicount;
+        }
         //create altimetry log request.
-        pThreadRX->create_request(_seqno, millicount);
+        pThreadRX->create_request(_seqno, elapse_tof);
 
         //increase seq numbers.
         _seqno++;
@@ -69,6 +76,8 @@ void trigger_pulse()
 
 int main(int argc, char** argv) 
 {
+    cout << ">>> STARTUP..." << std::endl;
+    
         //Default output file
         std::string outfilename = "altimetry.txt";
 
@@ -84,13 +93,13 @@ int main(int argc, char** argv)
            serial_path = argv[1];
         }
 
-        //create searial port
+        //create & start serial port comms
+    cout << ">>> START SERIAL THREAD..." << std::endl;
         pThreadRX = new xkthread_serialrx(outfilename, serial_path, serial_baud);
-
-        //start serial thread.
         pThreadRX->thread_start("serialrx");
 
 	//setup wiringPi in GPIO pin numbering mode..
+    cout << ">>> STARTUP PI GPIO..." << std::endl;
     	wiringPiSetupGpio();
 
 	//set IO pin state
@@ -99,10 +108,12 @@ int main(int argc, char** argv)
 	pinMode(PIN_TRIGGER, INPUT);
 
         //set LED Start state
+    cout << ">>> DEFAULT LED STATES..." << std::endl;
         digitalWrite(LED_ERR, HIGH);
         digitalWrite(LED_OK, LOW);
 
         //wire up interrupt on trigger pin
+    cout << ">>> WIRING ISR..." << std::endl;
         wiringPiISR(PIN_TRIGGER, INT_EDGE_FALLING, &trigger_pulse);
         
         //Flash LED
@@ -122,7 +133,7 @@ int main(int argc, char** argv)
                 digitalWrite(LED_ERR, toggle);
             }
             
-            usleep(100000);        
+            usleep(250000);        
         }
 
         //stop and delete thread.
