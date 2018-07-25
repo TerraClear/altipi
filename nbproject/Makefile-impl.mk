@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=altipi
 
 # Active Configuration
-DEFAULTCONF=Debug
+DEFAULTCONF=Debug_Linux
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release Debug_Pi Debug_OSX 
+ALLCONFS=Debug_Linux Release Debug_Pi Debug_OSX 
 
 
 # build

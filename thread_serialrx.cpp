@@ -16,15 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "xkthread_serialrx.hpp"
+#include "thread_serialrx.hpp"
 
-xkthread_serialrx::xkthread_serialrx(std::string file_path, std::string serial_path, uint32_t serial_baud) 
+thread_serialrx::thread_serialrx(std::string file_path, std::string serial_path, uint32_t serial_baud) 
 {
        _serial_path = serial_path;
        _file_path = file_path;
        
         //open serial port - Throws XKError..
-        _serial1.open(serial_path, (xk::XKBaud) serial_baud);
+        _serial1.open(serial_path, (terraclear::Baud) serial_baud);
         
         //init file
         createFile(_file_path);
@@ -33,11 +33,11 @@ xkthread_serialrx::xkthread_serialrx(std::string file_path, std::string serial_p
         _serial1.writeString(_Request_Info, _Serial_Timeout);
 }
 
-xkthread_serialrx::~xkthread_serialrx() 
+thread_serialrx::~thread_serialrx() 
 {
 }
 
-void xkthread_serialrx::create_request(uint32_t seqno, uint32_t millis_elapsed)
+void thread_serialrx::create_request(uint32_t seqno, uint32_t millis_elapsed)
 {
     altitude_entry entry;
     entry.seqno = seqno;
@@ -55,7 +55,7 @@ void xkthread_serialrx::create_request(uint32_t seqno, uint32_t millis_elapsed)
     
 }
 
-void xkthread_serialrx::thread_runloop()
+void thread_serialrx::thread_runloop()
 {
     //ensure serial port is open
     if (_serial1.isopen)
@@ -85,7 +85,7 @@ void xkthread_serialrx::thread_runloop()
      
 }
 
-void xkthread_serialrx::processMessage(std::string serialmsg)
+void thread_serialrx::processMessage(std::string serialmsg)
 {
     //check if serial message is distance response or other..
     if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance)
@@ -130,18 +130,18 @@ void xkthread_serialrx::processMessage(std::string serialmsg)
     
 }
         
- bool xkthread_serialrx::altimeter_ok()
+ bool thread_serialrx::altimeter_ok()
  {
      return _altimeter_ok;
  }
 
-bool xkthread_serialrx::fexists(std::string filename)
+bool thread_serialrx::fexists(std::string filename)
 {
     std::ifstream ifile(filename.c_str());
     return (bool)ifile;
 }
  
-void xkthread_serialrx::createFile(std::string filename)
+void thread_serialrx::createFile(std::string filename)
 {
     //file header string..
     std::string initstring = "\"SEQUENCE\",\"TIME\",\"DISTANCE\"\r\n";
@@ -153,7 +153,7 @@ void xkthread_serialrx::createFile(std::string filename)
 }
 
 //Append text to existing file
-bool xkthread_serialrx::appendFile(std::string filename, std::string appendstring)
+bool thread_serialrx::appendFile(std::string filename, std::string appendstring)
 {
     bool retval = false;
     try

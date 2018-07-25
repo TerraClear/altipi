@@ -12,7 +12,7 @@
             <sourceRootList/>
             <confList>
                 <confElem>
-                    <name>Debug</name>
+                    <name>Debug_Linux</name>
                     <type>1</type>
                 </confElem>
                 <confElem>

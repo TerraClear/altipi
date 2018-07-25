@@ -25,7 +25,7 @@
 #include <wiringPi.h>
 #include "pipinmap.hpp"
 
-#include "xkthread_serialrx.hpp"
+#include "thread_serialrx.hpp"
 
 //Pins for LED's and Trigger line.
 #define LED_OK  GPIO_23
@@ -38,7 +38,7 @@ std::chrono::steady_clock::time_point _lastmeasure;
 uint32_t elapse_tof = 0;
 
 //serial thread
-xkthread_serialrx* pThreadRX  = nullptr;
+thread_serialrx* pThreadRX  = nullptr;
 
 //sequence number of trigger 
 uint32_t _seqno = 0;
@@ -95,7 +95,7 @@ int main(int argc, char** argv)
 
         //create & start serial port comms
     cout << ">>> START SERIAL THREAD..." << std::endl;
-        pThreadRX = new xkthread_serialrx(outfilename, serial_path, serial_baud);
+        pThreadRX = new thread_serialrx(outfilename, serial_path, serial_baud);
         pThreadRX->thread_start("serialrx");
 
 	//setup wiringPi in GPIO pin numbering mode..

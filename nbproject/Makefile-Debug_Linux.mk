@@ -23,7 +23,7 @@ AS=as
 # Macros
 CND_PLATFORM=GNU-Linux
 CND_DLIB_EXT=so
-CND_CONF=Debug
+CND_CONF=Debug_Linux
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -35,11 +35,11 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/_ext/46522b86/xkerror.o \
-	${OBJECTDIR}/_ext/46522b86/xkserial.o \
-	${OBJECTDIR}/_ext/46522b86/xkthread.o \
+	${OBJECTDIR}/_ext/e1dda48/basicserial.o \
+	${OBJECTDIR}/_ext/e1dda48/error_base.o \
+	${OBJECTDIR}/_ext/e1dda48/thread_base.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/xkthread_serialrx.o
+	${OBJECTDIR}/thread_serialrx.o
 
 
 # C Compiler Flags
@@ -66,35 +66,30 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipi: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipi ${OBJECTFILES} ${LDLIBSOPTIONS} -pthread -lwiringPi -lm -lrt -lcrypt
 
-${OBJECTDIR}/_ext/46522b86/xkerror.o: ../tcpserial/xkerror.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
+${OBJECTDIR}/_ext/e1dda48/basicserial.o: ../libterraclear/src/basicserial.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkerror.o ../tcpserial/xkerror.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/basicserial.o ../libterraclear/src/basicserial.cpp
 
-${OBJECTDIR}/_ext/46522b86/xkserial.o: ../tcpserial/xkserial.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
+${OBJECTDIR}/_ext/e1dda48/error_base.o: ../libterraclear/src/error_base.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkserial.o ../tcpserial/xkserial.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/error_base.o ../libterraclear/src/error_base.cpp
 
-${OBJECTDIR}/_ext/46522b86/xkserial.hpp.gch: ../tcpserial/xkserial.hpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
+${OBJECTDIR}/_ext/e1dda48/thread_base.o: ../libterraclear/src/thread_base.cpp
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o "$@" ../tcpserial/xkserial.hpp
-
-${OBJECTDIR}/_ext/46522b86/xkthread.o: ../tcpserial/xkthread.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/46522b86
-	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/46522b86/xkthread.o ../tcpserial/xkthread.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/thread_base.o ../libterraclear/src/thread_base.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.cpp
 
-${OBJECTDIR}/xkthread_serialrx.o: xkthread_serialrx.cpp
+${OBJECTDIR}/thread_serialrx.o: thread_serialrx.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/xkthread_serialrx.o xkthread_serialrx.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/thread_serialrx.o thread_serialrx.cpp
 
 # Subprojects
 .build-subprojects:

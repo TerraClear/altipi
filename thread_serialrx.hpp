@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef XKTHREAD_SERIALRX_HPP
-#define XKTHREAD_SERIALRX_HPP
+#ifndef THREAD_SERIALRX_HPP
+#define THREAD_SERIALRX_HPP
 
 #include <iostream>
 #include <fstream>
@@ -25,14 +25,15 @@
 #include <queue>
 
 
-#include "../tcpserial/xkthread.hpp"
-#include "../tcpserial/xkserial.hpp"
+//statically include only specific files.. i.e. we dont need entire lib.
+#include "../libterraclear/src/thread_base.hpp"
+#include "../libterraclear/src/basicserial.hpp"
 
-class xkthread_serialrx : public xk::xkthread
+class thread_serialrx : public terraclear::thread_base
 {
     public:
-        xkthread_serialrx(std::string file_path, std::string serial_path, uint32_t serial_baud);
-        virtual ~xkthread_serialrx();
+        thread_serialrx(std::string file_path, std::string serial_path, uint32_t serial_baud);
+        virtual ~thread_serialrx();
         
         //create a new request for altimetry
         void create_request(uint32_t seqno, uint32_t millis_elapsed);
@@ -55,7 +56,7 @@ class xkthread_serialrx : public xk::xkthread
         std::queue<altitude_entry>  _entry_queue;
         std::string         _serial_path = "";
         std::string         _file_path = "";
-        xk::xkserial        _serial1;
+        terraclear::basicserial _serial1;
         bool                _altimeter_ok = false;
         std::string         _serial_data = "";
 
@@ -76,5 +77,5 @@ class xkthread_serialrx : public xk::xkthread
 
 };
 
-#endif /* XKTHREAD_SERIALRX_HPP */
+#endif /* THREAD_SERIALRX_HPP */
 
