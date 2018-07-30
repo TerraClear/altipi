@@ -28,9 +28,9 @@
 #include "thread_serialrx.hpp"
 
 //Pins for LED's and Trigger line.
-#define LED_OK  GPIO_23
-#define LED_ERR GPIO_18
-#define PIN_TRIGGER GPIO_25 
+#define LED_OK  GPIO_12
+#define LED_ERR GPIO_24
+#define PIN_TRIGGER GPIO_21 
 #define DEBOUNCE_MS 100
 
 //clock to measure time elapsed between triggers.
@@ -76,8 +76,6 @@ void trigger_pulse()
 
 int main(int argc, char** argv) 
 {
-    cout << ">>> STARTUP..." << std::endl;
-    
         //Default output file
         std::string outfilename = "altimetry.txt";
 
@@ -94,12 +92,12 @@ int main(int argc, char** argv)
         }
 
         //create & start serial port comms
-    cout << ">>> START SERIAL THREAD..." << std::endl;
+    std::cout << ">>> START SERIAL THREAD..." << std::endl;
         pThreadRX = new thread_serialrx(outfilename, serial_path, serial_baud);
         pThreadRX->thread_start("serialrx");
 
 	//setup wiringPi in GPIO pin numbering mode..
-    cout << ">>> STARTUP PI GPIO..." << std::endl;
+    std::cout << ">>> STARTUP PI GPIO..." << std::endl;
     	wiringPiSetupGpio();
 
 	//set IO pin state
@@ -108,12 +106,12 @@ int main(int argc, char** argv)
 	pinMode(PIN_TRIGGER, INPUT);
 
         //set LED Start state
-    cout << ">>> DEFAULT LED STATES..." << std::endl;
+    std::cout << ">>> DEFAULT LED STATES..." << std::endl;
         digitalWrite(LED_ERR, HIGH);
         digitalWrite(LED_OK, LOW);
 
         //wire up interrupt on trigger pin
-    cout << ">>> WIRING ISR..." << std::endl;
+    std::cout << ">>> WIRING ISR..." << std::endl;
         wiringPiISR(PIN_TRIGGER, INT_EDGE_FALLING, &trigger_pulse);
         
         //Flash LED
