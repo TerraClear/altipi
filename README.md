@@ -8,4 +8,4 @@ Basic Altimeter logger for SF11/C laser range finder.
 
 
 REQUIRES
-- libterraclear (clone into the same root folder as this repo)
+- libterraclear: Clone https://github.com/terraclear/libterraclear into the same root folder as this repo
