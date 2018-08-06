@@ -100,9 +100,15 @@ void thread_serialrx::processMessage(std::string serialmsg)
                altitude_entry entry = _entry_queue.back();
                _entry_queue.pop();
 
+               //convert to float
+                float distance_m = std::stof(serialmsg.substr(_Response_Distance.length(), serialmsg.length() - _Response_Distance.length()));
+               
+                //convert to ft
+                distance_m = distance_m * FEET_IN_METERS;
+                
                //write to file
                std::ostringstream strstrm;
-               strstrm <<  entry.seqno << "," << entry.millis_elapsed << "," << serialmsg.substr(_Response_Distance.length(), 4) << std::endl;
+               strstrm <<  entry.seqno << "," << entry.millis_elapsed << ","  <<  std::fixed << std::setprecision(2) << distance_m << std::endl;
                
                appendFile(_file_path, strstrm.str());
 

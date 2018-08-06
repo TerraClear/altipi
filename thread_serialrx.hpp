@@ -23,11 +23,15 @@
 #include <fstream>
 #include <sstream> 
 #include <queue>
-
+#include <iostream>
+#include <cmath>
+#include <iomanip>
 
 //statically include only specific files.. i.e. we dont need entire lib.
 #include "../libterraclear/src/thread_base.hpp"
 #include "../libterraclear/src/basicserial.hpp"
+
+#define FEET_IN_METERS 3.28084
 
 class thread_serialrx : public terraclear::thread_base
 {
