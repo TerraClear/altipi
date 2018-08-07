@@ -91,6 +91,11 @@ int main(int argc, char** argv)
            serial_path = argv[1];
         }
 
+        if (argc > 2)
+        {
+           outfilename = argv[2];
+        }
+
         //create & start serial port comms
     std::cout << ">>> START SERIAL THREAD..." << std::endl;
         pThreadRX = new thread_serialrx(outfilename, serial_path, serial_baud);
