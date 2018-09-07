@@ -74,18 +74,55 @@ void trigger_pulse()
     }
 }
 
+//check if file exists..
+bool fexists(const std::string& filename) 
+{
+  std::ifstream ifile(filename.c_str());
+  return (bool)ifile;
+}
+
+//generete next log file name in numbered sequence
+std::string generate_filename(std::string file_name, std::string file_ext)
+{
+    int file_seq = 1;
+    int max_tries = 1000;
+    std::string default_file = file_name + "." + file_ext;
+    std::string tmp_file = default_file;
+    
+    do 
+    {
+        std::stringstream strstrm;
+        strstrm << file_name << "_" << file_seq << "." << file_ext;
+        tmp_file = strstrm.str();
+        
+        file_seq++;
+        max_tries --;
+
+        //max file sequence generation reached, use default and overwrite.
+        if (max_tries <= 0)
+        {
+            tmp_file = default_file;
+            break;
+        }
+        
+    } while (fexists(tmp_file));
+    
+    return tmp_file;
+}
+
 int main(int argc, char** argv) 
 {
         //Default output file
-        std::string outfilename = "altimetry.txt";
-
+        std::string outfile_name = "altimetry";
+        std::string outfile_ext = "txt";
+       
         //Default serial
         std::string serial_path = "/dev/ttyS0";
         
         //Default Baud Rate
         uint32_t serial_baud = 115200;
         
-        //if port is supplied use supplied path..
+        //if port and path is supplied..
         if (argc > 1)
         {
            serial_path = argv[1];
@@ -93,12 +130,16 @@ int main(int argc, char** argv)
 
         if (argc > 2)
         {
-           outfilename = argv[2];
+            std::stringstream strstrm;
+            strstrm << argv[2] << "/" << outfile_name;
+            outfile_name = strstrm.str();
         }
 
+        std::string outfile_full = generate_filename(outfile_name, outfile_ext);
+
         //create & start serial port comms
-    std::cout << ">>> START SERIAL THREAD..." << std::endl;
-        pThreadRX = new thread_serialrx(outfilename, serial_path, serial_baud);
+        std::cout << ">>> START SERIAL THREAD..." << std::endl;
+        pThreadRX = new thread_serialrx(outfile_full, serial_path, serial_baud);
         pThreadRX->thread_start("serialrx");
 
 	//setup wiringPi in GPIO pin numbering mode..
