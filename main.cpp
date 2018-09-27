@@ -112,6 +112,9 @@ std::string generate_filename(std::string file_name, std::string file_ext)
 
 int main(int argc, char** argv) 
 {
+        //initiate the clock 
+        _lastmeasure = std::chrono::steady_clock::now();
+    
         //Default output file
         std::string outfile_name = "altimetry";
         std::string outfile_ext = "txt";

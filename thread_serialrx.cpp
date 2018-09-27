@@ -103,8 +103,8 @@ void thread_serialrx::processMessage(std::string serialmsg)
                //convert to float
                 float distance_m = std::stof(serialmsg.substr(_Response_Distance.length(), serialmsg.length() - _Response_Distance.length()));
                
-                //convert to ft
-                distance_m = distance_m * FEET_IN_METERS;
+                //distance in meters..
+                distance_m = distance_m; // * FEET_IN_METERS;
                 
                //write to file
                std::ostringstream strstrm;
