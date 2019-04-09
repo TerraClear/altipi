@@ -19,10 +19,11 @@ DEPLOYMENT NOTES:
 - Deploy binary to any folder on SD card, default is /altimeter
 - Create a system.d service for altimeter binary and register service
 
-DEPLOY TO SYSTEM.D
-------------------
-- copy altipi.service file to /lib/systemd/system/
-- Ensure rights are 644, i.e.: sudo chmod 644 /lib/systemd/system/altipi.service
+DEPLOY SYSTEM.D SERVICE
+-----------------------
+- deploy altipi.service file to /lib/systemd/system/altipi.service
+- Ensure rights are 644:
+-                     sudo chmod 644 /lib/systemd/system/altipi.service
 - configure system.d: 
 -                     sudo systemctl daemon-reload
 -                     sudo systemctl enable sample.service
