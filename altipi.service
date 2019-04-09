@@ -1,0 +1,10 @@
+[Unit]
+Description=TerraClear Altimeter Service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/altimeter/altipi /dev/ttyAMA0 /media/data/altimeter > /altimeter/altimeter.log 2>&1
+
+[Install]
+WantedBy=multi-user.target
