@@ -12,12 +12,11 @@ REQUIRES:
 - libterraclear: Clone https://github.com/terraclear/libterraclear into the same root folder as this repo
 
 
-DEPLOYMENT NOTES:
+RASPBERRY DEPLOYMENT NOTES:
 -----------------
-- user: pi
-- password: terrapi123
-- Deploy binary to any folder on SD card, default is /altimeter
-- Create a system.d service for altimeter binary and register service
+- SSH: user=pi, password=terrapi123
+- Deploy altipi binary to /altimeter
+- Create a system.d service for altipi and register service
 
 DEPLOY SYSTEM.D SERVICE
 -----------------------
