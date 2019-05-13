@@ -22,9 +22,11 @@
 #include <fstream>
 #include <chrono>
 
+//wiringPi
 #include <wiringPi.h>
-#include "pipinmap.hpp"
 
+//locals
+#include "pipinmap.hpp"
 #include "thread_serialrx.hpp"
 
 //Pins for LED's and Trigger line.

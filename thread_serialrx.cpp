@@ -150,7 +150,8 @@ bool thread_serialrx::fexists(std::string filename)
 void thread_serialrx::createFile(std::string filename)
 {
     //file header string..
-    std::string initstring = "\"SEQUENCE\",\"TIME\",\"DISTANCE\"\r\n";
+    
+    std::string initstring = "#VERSION_" + _version_string + " - SEQUENCE,TIME_MS,DISTANCE\r\n";
 
     //create blank new file, overwriting any existing files
     std::ofstream outfile(filename);

@@ -37,6 +37,7 @@
       <itemPath>.gitignore</itemPath>
       <itemPath>Makefile</itemPath>
       <itemPath>README.md</itemPath>
+      <itemPath>altipi.service</itemPath>
       <itemPath>appsettings.json</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -170,11 +171,12 @@
       <compileType>
         <ccTool>
           <standard>8</standard>
+          <incDir>
+            <pElem>..</pElem>
+          </incDir>
+          <commandLine>-DTC_USE_SERIAL</commandLine>
         </ccTool>
         <linkerTool>
-          <linkerDynSerch>
-            <pElem>..\tcpserial</pElem>
-          </linkerDynSerch>
           <linkerLibItems>
             <linkerLibLibItem>wiringPi</linkerLibLibItem>
             <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>

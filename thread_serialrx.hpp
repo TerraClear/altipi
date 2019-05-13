@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#define _VERSION_STRING "0.03"
+
 #ifndef THREAD_SERIALRX_HPP
 #define THREAD_SERIALRX_HPP
 
@@ -28,8 +30,12 @@
 #include <iomanip>
 
 //statically include only specific files.. i.e. we dont need entire lib.
-#include "../libterraclear/src/thread_base.hpp"
-#include "../libterraclear/src/basicserial.hpp"
+#ifndef TC_USE_SERIAL
+    #define TC_USE_SERIAL
+#endif
+#include "libterraclear/src/basicserial.hpp"
+#include "libterraclear/src/thread_base.hpp"
+
 
 #define FEET_IN_METERS 3.28084
 
@@ -44,6 +50,8 @@ class thread_serialrx : public terraclear::thread_base
         bool altimeter_ok();
     
     private:
+        const std::string _version_string = _VERSION_STRING;
+        
         struct altitude_entry
         {
             int seqno = 0;
