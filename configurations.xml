@@ -117,6 +117,8 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
+      <item path="gtest/src/gtest-all.cc" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
@@ -193,6 +195,8 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
+      <item path="gtest/src/gtest-all.cc" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
@@ -258,11 +262,10 @@
       </item>
       <folder path="TestFiles">
         <ccTool>
-          <commandLine>-DTC_USE_SERIAL</commandLine>
+          <incDir>
+            <pElem>gtest</pElem>
+          </incDir>
         </ccTool>
-        <linkerTool>
-          <commandLine>-pthread -lwiringPi -lm -lrt -lcrypt -lgtest</commandLine>
-        </linkerTool>
       </folder>
       <folder path="TestFiles/f1">
         <cTool>
@@ -277,13 +280,12 @@
           <commandLine>-DTC_USE_SERIAL</commandLine>
         </ccTool>
         <linkerTool>
-          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipitests</output>
-          <linkerLibItems>
-            <linkerOptionItem>`pkg-config --libs libserialport`</linkerOptionItem>
-          </linkerLibItems>
-          <commandLine>-pthread -lwiringPi -lm -lrt -lcrypt -lgtest -lgtest_main</commandLine>
+          <output>${TESTDIR}/TestFiles/f1</output>
+          <commandLine>-pthread -lwiringPi -lm -lrt -lcrypt -lgtest</commandLine>
         </linkerTool>
       </folder>
+      <item path="gtest/src/gtest-all.cc" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">
@@ -363,6 +365,8 @@
           <output>${TESTDIR}/TestFiles/f1</output>
         </linkerTool>
       </folder>
+      <item path="gtest/src/gtest-all.cc" ex="false" tool="1" flavor2="0">
+      </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="8">
       </item>
       <item path="pipinmap.hpp" ex="false" tool="3" flavor2="0">

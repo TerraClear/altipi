@@ -41,6 +41,16 @@ OBJECTFILES= \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/thread_serialrx.o
 
+# Test Directory
+TESTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}/tests
+
+# Test Files
+TESTFILES= \
+	${TESTDIR}/TestFiles/f1
+
+# Test Object Files
+TESTOBJECTFILES= \
+	${TESTDIR}/tests/testRunner.o
 
 # C Compiler Flags
 CFLAGS=
@@ -93,6 +103,95 @@ ${OBJECTDIR}/thread_serialrx.o: thread_serialrx.cpp
 
 # Subprojects
 .build-subprojects:
+
+# Build Test Targets
+.build-tests-conf: .build-tests-subprojects .build-conf ${TESTFILES}
+.build-tests-subprojects:
+
+${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/testRunner.o ${OBJECTFILES:%.o=%_nomain.o}
+	${MKDIR} -p ${TESTDIR}/TestFiles
+	${LINK.cc} -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS}   
+
+
+${TESTDIR}/tests/testRunner.o: tests/testRunner.cpp 
+	${MKDIR} -p ${TESTDIR}/tests
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I. `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/testRunner.o tests/testRunner.cpp
+
+
+${OBJECTDIR}/_ext/e1dda48/basicserial_nomain.o: ${OBJECTDIR}/_ext/e1dda48/basicserial.o ../libterraclear/src/basicserial.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ext/e1dda48/basicserial.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/basicserial_nomain.o ../libterraclear/src/basicserial.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ext/e1dda48/basicserial.o ${OBJECTDIR}/_ext/e1dda48/basicserial_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ext/e1dda48/error_base_nomain.o: ${OBJECTDIR}/_ext/e1dda48/error_base.o ../libterraclear/src/error_base.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ext/e1dda48/error_base.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/error_base_nomain.o ../libterraclear/src/error_base.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ext/e1dda48/error_base.o ${OBJECTDIR}/_ext/e1dda48/error_base_nomain.o;\
+	fi
+
+${OBJECTDIR}/_ext/e1dda48/thread_base_nomain.o: ${OBJECTDIR}/_ext/e1dda48/thread_base.o ../libterraclear/src/thread_base.cpp 
+	${MKDIR} -p ${OBJECTDIR}/_ext/e1dda48
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/_ext/e1dda48/thread_base.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/thread_base_nomain.o ../libterraclear/src/thread_base.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/_ext/e1dda48/thread_base.o ${OBJECTDIR}/_ext/e1dda48/thread_base_nomain.o;\
+	fi
+
+${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/main.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main_nomain.o main.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/main.o ${OBJECTDIR}/main_nomain.o;\
+	fi
+
+${OBJECTDIR}/thread_serialrx_nomain.o: ${OBJECTDIR}/thread_serialrx.o thread_serialrx.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/thread_serialrx.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g `pkg-config --cflags libserialport` -std=c++11  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/thread_serialrx_nomain.o thread_serialrx.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/thread_serialrx.o ${OBJECTDIR}/thread_serialrx_nomain.o;\
+	fi
+
+# Run Test Targets
+.test-conf:
+	@if [ "${TEST}" = "" ]; \
+	then  \
+	    ${TESTDIR}/TestFiles/f1 || true; \
+	else  \
+	    ./${TEST} || true; \
+	fi
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
