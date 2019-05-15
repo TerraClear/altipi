@@ -26,11 +26,40 @@
 #include <stdlib.h>
 #include <iostream>
 #include "gtest/gtest.h"
+#include "pipinmap.hpp"
+#include "thread_serialrx.hpp"
+
 
 /*
  * Test that true is true-- and that we have Googletest up and running.
  */
-TEST(AltiPiTest, TrueIsTrue)
+TEST(AltiPiTest, DefaultThreadSerialRXIsGood)
 {
-    EXPECT_EQ(true, true);
+    /* SETUP */
+  
+    //Default serial
+    std::string serial_path = "/dev/ttyS0";
+        
+    //Default Baud Rate
+    uint32_t serial_baud = 115200;
+
+    std::string outfile_full = "testaltimetry.txt";
+
+    //create & start serial port comms
+    std::cout << ">>> START SERIAL THREAD..." << std::endl;
+    thread_serialrx* pThreadRX = new thread_serialrx(outfile_full, serial_path, serial_baud);
+
+
+    /* RUN TEST */
+    EXPECT_NE(pThreadRX, nullptr);
+
+    EXPECT_EQ(pThreadRX->altimeter_ok(), false);
+
+    //stop and delete thread.
+    pThreadRX->thread_stopwait();
+    delete pThreadRX;
+    pThreadRX = nullptr;
+
+    // Pointer should be nulled now.
+    EXPECT_EQ(pThreadRX, nullptr);
 }
