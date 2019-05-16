@@ -27,26 +27,26 @@ thread_serialrx::thread_serialrx(std::string file_path, std::string serial_path,
         _serial1.open(serial_path, (terraclear::Baud) serial_baud);
         
         //init file
-        createFile(_file_path);
+       // createFile(_file_path);
         
+        _p_altimeter = new altimeter(file_path);
         //request altimeter info
         _serial1.writeString(_Request_Info, _Serial_Timeout);
 }
 
 thread_serialrx::~thread_serialrx() 
 {
+    delete _p_altimeter;
+    _p_altimeter = nullptr;
 }
 
 void thread_serialrx::create_request(uint32_t seqno, uint32_t millis_elapsed)
 {
-    altitude_entry entry;
-    entry.seqno = seqno;
-    entry.millis_elapsed = millis_elapsed;
-    
+
     //Add request entry in queue
     this->mutex_lock();
-        //save request to queue
-        _entry_queue.push(entry);
+    
+        _p_altimeter->create_request(seqno, millis_elapsed);
    
         //make request via serialport, response will come back async and pop queue
         _serial1.writeString(_Request_Distance, _Serial_Timeout);
@@ -70,111 +70,34 @@ void thread_serialrx::thread_runloop()
         //if not, might be partial string, so keep and for next.
         if (nlpos > 0)
         {
-            //cut out only up to \n terminator.
-            std::string serialmsg = _serial_data.substr(0, nlpos);
+              //cut out only up to \n terminator.
+              std::string serialmsg = _serial_data.substr(0, nlpos);
 
-            //keep remainder around or reset.
-            _serial_data = (_serial_data.length() > nlpos) ? _serial_data.substr(nlpos, _serial_data.length()) : "";
+              //keep remainder around or reset.
+              _serial_data = (_serial_data.length() > nlpos) ? _serial_data.substr(nlpos, _serial_data.length()) : "";
 
-            //Process Message..
-            processMessage(serialmsg);
-        }
-            
-       
+              //Process Message..
+              // TODO(JK, determine if mutex needed)
+              this->mutex_lock();
+                   bool messageParsed = _p_altimeter->processMessage(serialmsg);
+              this->mutex_unlock();
+              
+              if (!messageParsed)
+              {
+                  //bad message response, altimeter not ok..
+                  //request altimeter info to reset..
+                  _serial1.writeString(_Request_Info, _Serial_Timeout);
+              }
+         }
     }
-     
 }
 
-void thread_serialrx::processMessage(std::string serialmsg)
-{
-    //check if serial message is distance response or other..
-    if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance)
-    {
-        this->mutex_lock();
-           //check if there is any corresponding requests waiting..
-           if (_entry_queue.size() > 0)
-           {
-                std::cout << "Distance: " << serialmsg ;
-                
-               //pop FIFO item.
-               altitude_entry entry = _entry_queue.back();
-               _entry_queue.pop();
-
-               //convert to float
-                float distance_m = std::stof(serialmsg.substr(_Response_Distance.length(), serialmsg.length() - _Response_Distance.length()));
-               
-                //distance in meters..
-                distance_m = distance_m; // * FEET_IN_METERS;
-                
-               //write to file
-               std::ostringstream strstrm;
-               strstrm <<  entry.seqno << "," << entry.millis_elapsed << ","  <<  std::fixed << std::setprecision(2) << distance_m << std::endl;
-               
-               appendFile(_file_path, strstrm.str());
-
-           }
-       this->mutex_unlock();
-        
-    }
-    else if (serialmsg.substr(0, _Response_Info.length()) == _Response_Info)
-    {
-        //received info string, i.e. serial is good..
-        std::cout << "Altimeter OK: " << serialmsg ;
-        _altimeter_ok = true;
-        
-    }
-    else
-    {
-        //bad message response, altimeter not ok..
-        std::cout << "Altimeter ERROR: " << serialmsg ;
-        _altimeter_ok = false;
-        
-        //request altimeter info to reset..
-        _serial1.writeString(_Request_Info, _Serial_Timeout);
-    }
-
-    
-}
         
  bool thread_serialrx::altimeter_ok()
  {
-     return _altimeter_ok;
+     if (_p_altimeter != nullptr)
+     {
+         return _p_altimeter->altimeter_ok();
+     }
+     return false;
  }
-
-bool thread_serialrx::fexists(std::string filename)
-{
-    std::ifstream ifile(filename.c_str());
-    return (bool)ifile;
-}
- 
-void thread_serialrx::createFile(std::string filename)
-{
-    //file header string..
-    
-    std::string initstring = "#VERSION_" + _version_string + " - SEQUENCE,TIME_MS,DISTANCE\r\n";
-
-    //create blank new file, overwriting any existing files
-    std::ofstream outfile(filename);
-    outfile << initstring;    
-    outfile.close();    
-}
-
-//Append text to existing file
-bool thread_serialrx::appendFile(std::string filename, std::string appendstring)
-{
-    bool retval = false;
-    try
-    {
-        std::ofstream outfile;
-        outfile.open(filename, std::ios_base::app);
-        outfile << appendstring; 
-        retval = true;
-    }
-    catch (std::exception ex)
-    {
-        std::cout << "ERROR Appending File: " << ex.what();
-    }
-
-    return retval;
-}
-

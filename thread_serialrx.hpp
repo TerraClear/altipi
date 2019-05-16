@@ -35,9 +35,7 @@
 #endif
 #include "libterraclear/src/basicserial.hpp"
 #include "libterraclear/src/thread_base.hpp"
-
-
-#define FEET_IN_METERS 3.28084
+#include "altimeter.hpp"
 
 class thread_serialrx : public terraclear::thread_base
 {
@@ -52,40 +50,19 @@ class thread_serialrx : public terraclear::thread_base
     private:
         const std::string _version_string = _VERSION_STRING;
         
-        struct altitude_entry
-        {
-            int seqno = 0;
-            uint32_t millis_elapsed = 0;
-            float distance_meters;
-        };
         
         const uint32_t      _Serial_Timeout = 250;
         const std::string   _Request_Distance = "?LD\r\n";
         const std::string   _Request_Info = "?\r\n";
-        const std::string   _Response_Distance = "?LD ";
-        const std::string   _Response_Info = "? SF11";
         
-        std::queue<altitude_entry>  _entry_queue;
         std::string         _serial_path = "";
         std::string         _file_path = "";
         terraclear::basicserial _serial1;
-        bool                _altimeter_ok = false;
         std::string         _serial_data = "";
+        altimeter*          _p_altimeter;
 
         //implementation of base class pure virtual functions..
         void thread_runloop();
-        
-        //Process Serial Port response messages.
-        void processMessage(std::string serialmsg);
-        
-        //Check if file exists
-        bool fexists(std::string filename);
-
-        //create blank file
-        void createFile(std::string filename);
-        
-        //Append text to existing file
-        bool appendFile(std::string filename, std::string appendstring);
 
 };
 

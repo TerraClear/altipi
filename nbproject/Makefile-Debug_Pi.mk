@@ -38,6 +38,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/_ext/e1dda48/basicserial.o \
 	${OBJECTDIR}/_ext/e1dda48/error_base.o \
 	${OBJECTDIR}/_ext/e1dda48/thread_base.o \
+	${OBJECTDIR}/altimeter.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/thread_serialrx.o
 
@@ -91,6 +92,11 @@ ${OBJECTDIR}/_ext/e1dda48/thread_base.o: ../libterraclear/src/thread_base.cpp
 	${RM} "$@.d"
 	$(COMPILE.cc) -g -I.. `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/thread_base.o ../libterraclear/src/thread_base.cpp
 
+${OBJECTDIR}/altimeter.o: altimeter.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -I.. `pkg-config --cflags libserialport` -std=c++11  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/altimeter.o altimeter.cpp
+
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
@@ -111,6 +117,7 @@ ${OBJECTDIR}/thread_serialrx.o: thread_serialrx.cpp
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipitests: ${TESTDIR}/tests/testRunner.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/altipitests $^ ${LDLIBSOPTIONS} -pthread -lwiringPi -lm -lrt -lcrypt -lgtest -pthread -lwiringPi -lm -lrt -lcrypt -lgtest -lgtest_main `pkg-config --libs libserialport`   
+
 
 ${TESTDIR}/tests/testRunner.o: tests/testRunner.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
@@ -155,6 +162,19 @@ ${OBJECTDIR}/_ext/e1dda48/thread_base_nomain.o: ${OBJECTDIR}/_ext/e1dda48/thread
 	    $(COMPILE.cc) -g -I.. `pkg-config --cflags libserialport` -std=c++11  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/_ext/e1dda48/thread_base_nomain.o ../libterraclear/src/thread_base.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/_ext/e1dda48/thread_base.o ${OBJECTDIR}/_ext/e1dda48/thread_base_nomain.o;\
+	fi
+
+${OBJECTDIR}/altimeter_nomain.o: ${OBJECTDIR}/altimeter.o altimeter.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	@NMOUTPUT=`${NM} ${OBJECTDIR}/altimeter.o`; \
+	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T main$$') || \
+	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
+	then  \
+	    ${RM} "$@.d";\
+	    $(COMPILE.cc) -g -I.. `pkg-config --cflags libserialport` -std=c++11  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/altimeter_nomain.o altimeter.cpp;\
+	else  \
+	    ${CP} ${OBJECTDIR}/altimeter.o ${OBJECTDIR}/altimeter_nomain.o;\
 	fi
 
 ${OBJECTDIR}/main_nomain.o: ${OBJECTDIR}/main.o main.cpp 
