@@ -26,6 +26,7 @@ altimeter::altimeter(std::string filepath)
     this->_altimeter_ok = false;
     _file_path = filepath;
     create_altimeter_logfile(filepath);
+    //create_altimeter_logfile("");
     _last_altitude_m = 0.0;
     _last_seen_altitudes = {};
 }
@@ -74,8 +75,24 @@ float altimeter::last_altitude_m()
 
 bool altimeter::processMessage(std::string serialmsg)
 {
+    // A message is a distance if it is preceeded by _Response_Distance or is a float.
+    auto checkIfFloat = [this, serialmsg]() {
+        try {
+             float distance_m = std::stof(
+                    serialmsg.substr(_Response_Distance.length(), 
+                     serialmsg.length() - _Response_Distance.length()));
+        } catch (std::exception ex)
+        {
+            
+            std::cout << "Error converting to float: " << ex.what();
+            return false;
+        }
+    };
+    
+    
     //check if serial message is distance response or other..
-    if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance) {
+    if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance 
+            || checkIfFloat()) {
 
 
         //convert to float
@@ -86,15 +103,16 @@ bool altimeter::processMessage(std::string serialmsg)
             _last_seen_altitudes.pop_back();
         }
         
+        // add altitude to last seen altitudes
+        _last_seen_altitudes.push_front(distance_m); 
+              
         // If we have a full queue, sanity check value, if it is outside some number 
         // of standard deviations, it is likely a bad reading.
         // If we don't have a full queue, we are at the beginning of the flight and 
         // need to build up our data.
         if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
-                is_within_one_standard_deviations(distance_m))
+                is_within_two_standard_deviations(distance_m))
         {
-              // add altitude to last seen altitudes
-              _last_seen_altitudes.push_front(distance_m); 
               
               _last_altitude_m = distance_m;
         }
@@ -191,7 +209,7 @@ float altimeter::get_median_altitude()
     return median_distance_m;
 }
          
-bool altimeter::is_within_one_standard_deviations(float latest_altitude) {
+bool altimeter::is_within_two_standard_deviations(float latest_altitude) {
    
     float mean = get_mean_altitude();
 
@@ -221,16 +239,16 @@ bool altimeter::is_within_one_standard_deviations(float latest_altitude) {
     if (checkIfStdevNearZero())
     {
         // latest altitude is within one standard deviation of previous values.
-        std::cout << "Usable altitude" << std::endl;
+        //std::cout << "Usable altitude" << std::endl;
         return true; // All our numbers are the same.
     }
     
     // Check that the new value is within one standard deviation of the mean.
-    if (latest_altitude <= (mean + stdev) && 
-            latest_altitude >= (mean - stdev) )
+    if (latest_altitude <= (mean + 2*stdev) && 
+            latest_altitude >= (mean - 2*stdev) )
     {
         // latest altitude is within one standard deviation of previous values.
-        std::cout << "Usable altitude" << std::endl;
+        //std::cout << "Usable altitude" << std::endl;
         return true;
     }
     

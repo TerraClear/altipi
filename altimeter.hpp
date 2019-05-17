@@ -101,7 +101,7 @@ class altimeter
          // Check if the given altitude is within one standard deviation of
          // of the previously seen altitudes.
          // Note: Can return nan if _last_seen_altitudes is not ready and full of numbers.
-         bool is_within_one_standard_deviations(float latest_altitude);
+         bool is_within_two_standard_deviations(float latest_altitude);
 
 };
 
