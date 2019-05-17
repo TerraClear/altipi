@@ -85,20 +85,21 @@ bool altimeter::processMessage(std::string serialmsg)
             // kick out oldest value
             _last_seen_altitudes.pop_back();
         }
-        // add altitude to last seen altitudes
-        _last_seen_altitudes.push_front(distance_m);
-
-        float average_distance_m = std::accumulate(
-                _last_seen_altitudes.begin(),
-                _last_seen_altitudes.end(),
-                0.0) / static_cast<float> (_last_seen_altitudes.size());
-               
-        //std::cout << "Distance is " << average_distance_m 
-        //      << "; size is " << _last_seen_altitudes.size() << std::endl;
-
-
-        _last_altitude_m = average_distance_m;
-
+        
+        // If we have a full queue, sanity check value, if it is outside some number 
+        // of standard deviations, it is likely a bad reading.
+        // If we don't have a full queue, we are at the beginning of the flight and 
+        // need to build up our data.
+        if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
+                is_within_one_standard_deviations(distance_m))
+        {
+              // add altitude to last seen altitudes
+              _last_seen_altitudes.push_front(distance_m); 
+              
+              _last_altitude_m = distance_m;
+        }
+        
+        // TODO(JK, Log distance seen here.)
     }
     else if (serialmsg.substr(0, _Response_Info.length()) == _Response_Info)
     {
@@ -164,3 +165,76 @@ bool altimeter::append_to_log(std::string filename, std::string appendstring)
     return retval;
 }
 
+float altimeter::get_mean_altitude()
+{
+     return std::accumulate(
+                _last_seen_altitudes.begin(),
+                _last_seen_altitudes.end(),
+                0.0) / static_cast<float> (_last_seen_altitudes.size());
+}
+         
+float altimeter::get_median_altitude()
+{
+    // copy list into array so we can use std::sort on it.
+    float copy_altitudes[_last_seen_altitudes.size()];
+        
+    std::copy(_last_seen_altitudes.begin(), _last_seen_altitudes.end(), copy_altitudes);
+        
+    std::sort(copy_altitudes, 
+         copy_altitudes+sizeof(copy_altitudes)/sizeof(copy_altitudes[0]));
+        
+    // get the middle value of the sorted array
+    float median_distance_m = copy_altitudes[(_last_seen_altitudes.size() + 1)/2];
+    
+    std::cout << "median is " << median_distance_m << std::endl;
+    
+    return median_distance_m;
+}
+         
+bool altimeter::is_within_one_standard_deviations(float latest_altitude) {
+   
+    float mean = get_mean_altitude();
+
+    std::vector<float> diff(_last_seen_altitudes.size());
+    std::transform(_last_seen_altitudes.begin(),
+            _last_seen_altitudes.end(),
+            diff.begin(), 
+            [mean](float x) { return x - mean; });
+    float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
+    float stdev = std::sqrt(sq_sum / _last_seen_altitudes.size());
+    
+    std::cout << "mean = " << mean << " and stdev = " << stdev << std::endl;
+    
+    
+    /* This is some math that checks if the stdev is 0.  We have to use
+       an epsilon to check because we are dealing with imprecise floating
+       point numbers.
+       If the stdev is 0, we are saying that all the altitude readings are the same,
+       which is a valid case if the aircraft is say, being held statically above ground.
+       It is an edge case. 
+     */
+    auto checkIfStdevNearZero = [stdev]() {
+        const double epsilon = 1e-5;
+        return std::abs(stdev - 0.0) <= epsilon * std::abs(0.0);
+    };
+    
+    if (checkIfStdevNearZero())
+    {
+        // latest altitude is within one standard deviation of previous values.
+        std::cout << "Usable altitude" << std::endl;
+        return true; // All our numbers are the same.
+    }
+    
+    // Check that the new value is within one standard deviation of the mean.
+    if (latest_altitude <= (mean + stdev) && 
+            latest_altitude >= (mean - stdev) )
+    {
+        // latest altitude is within one standard deviation of previous values.
+        std::cout << "Usable altitude" << std::endl;
+        return true;
+    }
+    
+        // latest altitude is within one standard deviation of previous values.
+        std::cout << "THROWING OUT ALTITUDE " << latest_altitude << std::endl;
+    return false;
+}

@@ -28,7 +28,7 @@
 #include <iomanip>
 #include <numeric>
 #include <list>
-
+#include <algorithm>
 
 //statically include only specific files.. i.e. we dont need entire lib.
 #ifndef TC_USE_SERIAL
@@ -73,7 +73,7 @@ class altimeter
          const std::string   _Response_Distance = "?LD ";
          const std::string   _Response_Info = "? SF11";
          
-         const int           _Max_Number_Of_Kept_Altitudes = 30;
+         const int           _Max_Number_Of_Kept_Altitudes = 10;
         
          /* Member variables */
          std::queue<altitude_entry>  _entry_queue;
@@ -92,6 +92,16 @@ class altimeter
          //Append text to existing logfile
          bool append_to_log(std::string filename, std::string appendstring);
 
+         // Get the mean altitude of our previously seen altitudes.
+         float get_mean_altitude();
+         
+         // Get the median altitude of our previously seen altitudes.
+         float get_median_altitude();
+         
+         // Check if the given altitude is within one standard deviation of
+         // of the previously seen altitudes.
+         // Note: Can return nan if _last_seen_altitudes is not ready and full of numbers.
+         bool is_within_one_standard_deviations(float latest_altitude);
 
 };
 
