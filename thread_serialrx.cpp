@@ -26,9 +26,6 @@ thread_serialrx::thread_serialrx(std::string file_path, std::string serial_path,
         //open serial port - Throws XKError..
         _serial1.open(serial_path, (terraclear::Baud) serial_baud);
         
-        //init file
-       // createFile(_file_path);
-        
         _p_altimeter = new altimeter(file_path);
         //request altimeter info
         _serial1.writeString(_Request_Info, _Serial_Timeout);

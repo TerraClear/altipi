@@ -81,10 +81,12 @@ class altimeter
          bool                _altimeter_ok = false;
          std::string         _serial_data = "";
          std::string         _file_path = "";
+         std::string         _debug_file_path;
          float               _last_altitude_m;
+         altitude_entry      _last_entry;
          
-         // Log an entry into the logfile.
-         void log_altitude_entry(altitude_entry* entry);
+         // Log a formatted altitude entry into the specified logfile.
+         void log_altitude_entry(altitude_entry* entry, std::string filename);
         
          // Check that the logfile exists.
          bool log_exists(std::string filename);

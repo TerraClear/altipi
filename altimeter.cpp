@@ -25,10 +25,14 @@ altimeter::altimeter(std::string filepath)
 {
     this->_altimeter_ok = false;
     _file_path = filepath;
+    _debug_file_path = "debugaltimetry.txt";
     create_altimeter_logfile(filepath);
-    //create_altimeter_logfile("");
+    create_altimeter_logfile(_debug_file_path);
     _last_altitude_m = 0.0;
     _last_seen_altitudes = {};
+    _last_entry.seqno = 0;
+    _last_entry.millis_elapsed = 0;
+    _last_entry.distance_meters = -1.0;  // IE undefined
 }
 
 altimeter::~altimeter() 
@@ -47,13 +51,13 @@ void altimeter::create_altimeter_logfile(std::string filename)
     outfile.close();    
 }
         
-void altimeter::log_altitude_entry(altitude_entry* entry)
+void altimeter::log_altitude_entry(altitude_entry* entry, std::string filename)
 {
     //write to file
     std::ostringstream strstrm;
     strstrm <<  entry->seqno << "," << entry->millis_elapsed << ","  
             <<  std::fixed << std::setprecision(2) << entry->distance_meters << std::endl;
-    append_to_log(_file_path, strstrm.str());
+    append_to_log(filename, strstrm.str());
 }
 
 void altimeter::create_request(uint32_t seqno, uint32_t millis_elapsed)
@@ -134,7 +138,7 @@ bool altimeter::processMessage(std::string serialmsg)
         
         return false;
     }
-
+    
     //check if there is any corresponding requests waiting.
     // if there are, log a distance measurement.
     if (_entry_queue.size() > 0) {
@@ -147,7 +151,15 @@ bool altimeter::processMessage(std::string serialmsg)
         entry.distance_meters = _last_altitude_m;
         std::cout << "Distance logged is " << _last_altitude_m << std::endl;
 
-        log_altitude_entry(&entry);
+        log_altitude_entry(&entry, _file_path);
+        
+        _last_entry = entry;
+    }
+    
+    // log the distance for debug reasons in a separate file.
+    if (_last_entry.distance_meters > 0)
+    {
+        log_altitude_entry(&_last_entry, _debug_file_path);
     }
     return true;
 }
@@ -204,7 +216,7 @@ float altimeter::get_median_altitude()
     // get the middle value of the sorted array
     float median_distance_m = copy_altitudes[(_last_seen_altitudes.size() + 1)/2];
     
-    std::cout << "median is " << median_distance_m << std::endl;
+    //std::cout << "median is " << median_distance_m << std::endl;
     
     return median_distance_m;
 }
@@ -221,7 +233,7 @@ bool altimeter::is_within_two_standard_deviations(float latest_altitude) {
     float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     float stdev = std::sqrt(sq_sum / _last_seen_altitudes.size());
     
-    std::cout << "mean = " << mean << " and stdev = " << stdev << std::endl;
+    //std::cout << "mean = " << mean << " and stdev = " << stdev << std::endl;
     
     
     /* This is some math that checks if the stdev is 0.  We have to use
@@ -253,6 +265,6 @@ bool altimeter::is_within_two_standard_deviations(float latest_altitude) {
     }
     
         // latest altitude is within one standard deviation of previous values.
-        std::cout << "THROWING OUT ALTITUDE " << latest_altitude << std::endl;
+        //std::cout << "THROWING OUT ALTITUDE " << latest_altitude << std::endl;
     return false;
 }
