@@ -41,7 +41,7 @@ class altimeter
         /*
          * Construct altimeter with a filepath to be used for logging.
          */
-        altimeter(std::string filepath);
+        altimeter(std::string filepath, std::string debug_filepath);
         ~altimeter();
         
         // Create the logfile of the altimeter data, consumed by other clients.

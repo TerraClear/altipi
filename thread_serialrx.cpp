@@ -18,31 +18,34 @@
 
 #include "thread_serialrx.hpp"
 
-thread_serialrx::thread_serialrx(std::string file_path, std::string serial_path, uint32_t serial_baud) 
+thread_serialrx::thread_serialrx(altimeter* p_altimeter, 
+        std::string serial_path, uint32_t serial_baud) 
 {
        _serial_path = serial_path;
-       _file_path = file_path;
        
         //open serial port - Throws XKError..
         _serial1.open(serial_path, (terraclear::Baud) serial_baud);
         
-        _p_altimeter = new altimeter(file_path);
+        _p_altimeter = p_altimeter;
         //request altimeter info
         _serial1.writeString(_Request_Info, _Serial_Timeout);
 }
 
 thread_serialrx::~thread_serialrx() 
 {
-    delete _p_altimeter;
-    _p_altimeter = nullptr;
+    // we do not own the altimeter, so do not free it.
 }
 
 void thread_serialrx::create_request(uint32_t seqno, uint32_t millis_elapsed)
 {
 
+    if (_p_altimeter == nullptr)
+    {
+        // TODO (JK, log error here.)
+        return;
+    }
     //Add request entry in queue
     this->mutex_lock();
-    
         _p_altimeter->create_request(seqno, millis_elapsed);
    
         //make request via serialport, response will come back async and pop queue

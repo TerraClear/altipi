@@ -27,6 +27,7 @@
 
 //locals
 #include "pipinmap.hpp"
+#include "altimeter.hpp"
 #include "thread_serialrx.hpp"
 
 //Pins for LED's and Trigger line.
@@ -120,7 +121,10 @@ int main(int argc, char** argv)
         //Default output file
         std::string outfile_name = "altimetry";
         std::string outfile_ext = "txt";
-       
+ 
+        //Default output debug log file
+        std::string outfile_debug_name = "debug_altimetry";
+        
         //Default serial
         std::string serial_path = "/dev/ttyS0";
         
@@ -139,12 +143,23 @@ int main(int argc, char** argv)
             strstrm << argv[2] << "/" << outfile_name;
             outfile_name = strstrm.str();
         }
+        
+        if (argc > 3)
+        {
+            std::stringstream strstrm;
+            strstrm << argv[2] << "/" << outfile_debug_name;
+            outfile_debug_name = strstrm.str();
+        }
 
         std::string outfile_full = generate_filename(outfile_name, outfile_ext);
+        std::string outfile_debug_full = generate_filename(outfile_debug_name, outfile_ext);
 
+        //create altimeter
+        altimeter* pAltimeter = new altimeter(outfile_full, outfile_debug_full);
+        
         //create & start serial port comms
         std::cout << ">>> START SERIAL THREAD..." << std::endl;
-        pThreadRX = new thread_serialrx(outfile_full, serial_path, serial_baud);
+        pThreadRX = new thread_serialrx(pAltimeter, serial_path, serial_baud);
         pThreadRX->thread_start("serialrx");
 
 	//setup wiringPi in GPIO pin numbering mode..
@@ -187,7 +202,13 @@ int main(int argc, char** argv)
 
         //stop and delete thread.
         pThreadRX->thread_stopwait();
+        
+        delete pAltimeter;
+        pAltimeter = nullptr;
+        
         delete pThreadRX;
+        pThreadRX = nullptr;
+       
         
     	return 0;
 

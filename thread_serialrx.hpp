@@ -40,7 +40,7 @@
 class thread_serialrx : public terraclear::thread_base
 {
     public:
-        thread_serialrx(std::string file_path, std::string serial_path, uint32_t serial_baud);
+        thread_serialrx(altimeter* p_altimeter, std::string serial_path, uint32_t serial_baud);
         virtual ~thread_serialrx();
         
         //create a new request for altimetry
@@ -56,7 +56,6 @@ class thread_serialrx : public terraclear::thread_base
         const std::string   _Request_Info = "?\r\n";
         
         std::string         _serial_path = "";
-        std::string         _file_path = "";
         terraclear::basicserial _serial1;
         std::string         _serial_data = "";
         altimeter*          _p_altimeter;

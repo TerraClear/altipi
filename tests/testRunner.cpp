@@ -38,16 +38,18 @@ TEST(AltiPiTest, DefaultThreadSerialRXIsGood)
 {
     /* SETUP */
   
+    altimeter* p_testAltimeter = new altimeter(
+            "testAltimeter.txt", "testDebugAltimeter.txt");
+    
     //Default serial
     std::string serial_path = "/dev/ttyS0";
         
     //Default Baud Rate
     uint32_t serial_baud = 115200;
 
-    std::string outfile_full = "testaltimetry.txt";
-
     //create & start serial port comms
-    thread_serialrx* pThreadRX = new thread_serialrx(outfile_full, serial_path, serial_baud);
+    thread_serialrx* pThreadRX = new thread_serialrx(p_testAltimeter,
+            serial_path, serial_baud);
 
 
     /* RUN TEST */
@@ -57,6 +59,9 @@ TEST(AltiPiTest, DefaultThreadSerialRXIsGood)
 
     //stop and delete thread.
     pThreadRX->thread_stopwait();
+    delete p_testAltimeter;
+    p_testAltimeter = nullptr;
+    
     delete pThreadRX;
     pThreadRX = nullptr;
 
@@ -71,8 +76,7 @@ TEST(AltiPiTest, DefaultThreadSerialRXIsGood)
 TEST(AltimeterTest, DefaultsOk)
 {
     /* SETUP */
-  
-    altimeter testAltimeter = altimeter("textfile.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);
@@ -84,8 +88,7 @@ TEST(AltimeterTest, DefaultsOk)
 TEST(AltimeterTest, ProcessMessageTest)
 {
     /* SETUP */
-  
-    altimeter testAltimeter = altimeter("textfile.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);
@@ -114,7 +117,7 @@ TEST(AltimeterTest, ProcessMessageTest)
 TEST(AltimeterTest, AltimterDistanceAverageAllSameTest)
 {
     /* SETUP */
-    altimeter testAltimeter = altimeter("testAltimeterDistances.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);
@@ -155,7 +158,7 @@ TEST(AltimeterTest, AltimterDistanceAverageAllSameTest)
 TEST(AltimeterTest, AltimterDistanceAverageChangingTest)
 {
     /* SETUP */
-    altimeter testAltimeter = altimeter("testAltimeterDistances.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);
@@ -190,7 +193,7 @@ TEST(AltimeterTest, AltimterDistanceAverageChangingTest)
 TEST(AltimeterTest, AltimterAverageExpectedCase)
 {
     /* SETUP */
-    altimeter testAltimeter = altimeter("testAltimeterDistances.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);
@@ -231,7 +234,7 @@ TEST(AltimeterTest, AltimterAverageExpectedCase)
 TEST(AltimeterTest, AltimeterBadValueCase)
 {
     /* SETUP */
-    altimeter testAltimeter = altimeter("testAltimeterDistances.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);
@@ -266,7 +269,7 @@ TEST(AltimeterTest, AltimeterBadValueCase)
 TEST(AltimeterTest, AltimeterWithStdev)
 {
     /* SETUP */
-    altimeter testAltimeter = altimeter("testAltimeterDistances.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);
@@ -307,7 +310,7 @@ TEST(AltimeterTest, AltimeterWithStdev)
 TEST(AltimeterTest, AltimeterWithStdevWithOutsideValues)
 {
     /* SETUP */
-    altimeter testAltimeter = altimeter("testAltimeterDistances.txt");
+    altimeter testAltimeter = altimeter("testAltimeter.txt", "testDebugAltimeter.txt");
     
     /* RUN TEST */
     EXPECT_EQ(testAltimeter.altimeter_ok(), false);

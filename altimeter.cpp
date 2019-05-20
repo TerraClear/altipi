@@ -21,11 +21,11 @@
 
 #include "altimeter.hpp"
 
-altimeter::altimeter(std::string filepath) 
+altimeter::altimeter(std::string filepath, std::string debug_filepath) 
 {
     this->_altimeter_ok = false;
     _file_path = filepath;
-    _debug_file_path = "debugaltimetry.txt";
+    _debug_file_path = debug_filepath;
     create_altimeter_logfile(filepath);
     create_altimeter_logfile(_debug_file_path);
     _last_altitude_m = 0.0;
@@ -93,12 +93,16 @@ bool altimeter::processMessage(std::string serialmsg)
         }
     };
     
-    
+    if (serialmsg.substr(0, _Response_Info.length()) == _Response_Info)
+    {
+        //received info string, i.e. serial is good..
+        std::cout << "Altimeter OK: " << serialmsg ;
+        _altimeter_ok = true;
+        
+    }
     //check if serial message is distance response or other..
-    if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance 
+    else if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance 
             || checkIfFloat()) {
-
-
         //convert to float
         float distance_m = std::stof(serialmsg.substr(_Response_Distance.length(), serialmsg.length() - _Response_Distance.length()));
 
@@ -122,13 +126,6 @@ bool altimeter::processMessage(std::string serialmsg)
         }
         
         // TODO(JK, Log distance seen here.)
-    }
-    else if (serialmsg.substr(0, _Response_Info.length()) == _Response_Info)
-    {
-        //received info string, i.e. serial is good..
-        std::cout << "Altimeter OK: " << serialmsg ;
-        _altimeter_ok = true;
-        
     }
     else
     {
