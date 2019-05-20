@@ -139,9 +139,9 @@ TEST(AltimeterTest, AltimterDistanceAverageAllSameTest)
     
     
     // This test shows that we handled up to 10 items correctly.
-    for (int i = 0; i < 11; i++)
+    for (std::string dist: distance)
     {
-        EXPECT_EQ(true, testAltimeter.processMessage(distance[i]));
+        EXPECT_EQ(true, testAltimeter.processMessage(dist));
     }
     
     ASSERT_FLOAT_EQ(5.0, testAltimeter.last_altitude_m());
@@ -174,9 +174,9 @@ TEST(AltimeterTest, AltimterDistanceAverageChangingTest)
     
     
     // This test shows that we handled up to 10 items correctly.
-    for (int i = 0; i < 5; i++)
+    for (std::string dist: distance)
     {
-        EXPECT_EQ(true, testAltimeter.processMessage(distance[i]));
+      EXPECT_EQ(true, testAltimeter.processMessage(dist));
     }
     
     // Calculated 3.1 as the average of the distance values.
@@ -215,9 +215,9 @@ TEST(AltimeterTest, AltimterAverageExpectedCase)
     
     
     // This test shows that we handled up to 10 items correctly.
-    for (int i = 0; i < 11; i++)
+    for (std::string dist: distance)
     {
-        EXPECT_EQ(true, testAltimeter.processMessage(distance[i]));
+        EXPECT_EQ(true, testAltimeter.processMessage(dist));
     }
     
     ASSERT_FLOAT_EQ(200.0, testAltimeter.last_altitude_m());
@@ -292,9 +292,9 @@ TEST(AltimeterTest, AltimeterWithStdev)
     
     
     // This test shows that we handled up to 10 items correctly.
-    for (int i = 0; i < 11; i++)
+    for (std::string dist: distance)
     {
-        EXPECT_EQ(true, testAltimeter.processMessage(distance[i]));
+      EXPECT_EQ(true, testAltimeter.processMessage(dist));
     }
     
     ASSERT_FLOAT_EQ(201.61, testAltimeter.last_altitude_m());
@@ -314,12 +314,12 @@ TEST(AltimeterTest, AltimeterWithStdevWithOutsideValues)
     
     // Test distances to try.
     std::vector<std::string> distance{
-            "?LD 64.04",  // 0
+            "?LD 64.04",    // 0
             "?LD 61.9292",  // 1
             "?LD 60.9386",  // 2
             "?LD 60.3107",  // 3
             "?LD 60.2101",  // 4
-            "?LD 59.68",  // 5
+            "?LD 59.68",    // 5
             "?LD 59.5091",  // 6
             "?LD 59.3415",  // 7
             "?LD 59.6889",  // 8
@@ -327,7 +327,7 @@ TEST(AltimeterTest, AltimeterWithStdevWithOutsideValues)
             "?LD 30.1599",  // 10
             "?LD 30.0746",  // 11
             "?LD 30.0746",  // 12
-            "?LD 61.4507"  // 13
+            "?LD 61.4507"   // 13
     };
     
     
@@ -336,11 +336,11 @@ TEST(AltimeterTest, AltimeterWithStdevWithOutsideValues)
     
     
     // This test shows that we handled up to 10 items correctly.
-    for (int i = 0; i < 13; i++)
+    for (std::string dist: distance)
     {
-        EXPECT_EQ(true, testAltimeter.processMessage(distance[i]));
+        EXPECT_EQ(true, testAltimeter.processMessage(dist));
     }
     
-    ASSERT_FLOAT_EQ(60.3412, testAltimeter.last_altitude_m());
+    ASSERT_FLOAT_EQ(61.4507, testAltimeter.last_altitude_m());
     
 }
