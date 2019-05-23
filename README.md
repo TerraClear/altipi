@@ -29,5 +29,5 @@ DEPLOY SYSTEM.D SERVICE
 -     sudo chmod 644 /lib/systemd/system/altipi.service
 - configure system.d: 
 -     sudo systemctl daemon-reload
--     sudo systemctl enable sample.service
+-     sudo systemctl enable altipi.service
 - reboot
