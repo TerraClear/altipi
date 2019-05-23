@@ -38,6 +38,14 @@ CND_ARTIFACT_PATH_Debug_OSX=dist/Debug_OSX/CLang-MacOSX/altipi
 CND_PACKAGE_DIR_Debug_OSX=dist/Debug_OSX/CLang-MacOSX/package
 CND_PACKAGE_NAME_Debug_OSX=altipi.tar
 CND_PACKAGE_PATH_Debug_OSX=dist/Debug_OSX/CLang-MacOSX/package/altipi.tar
+# Release_Pi configuration
+CND_PLATFORM_Release_Pi=GNU-Linux
+CND_ARTIFACT_DIR_Release_Pi=dist/Release_Pi/GNU-Linux
+CND_ARTIFACT_NAME_Release_Pi=altipi
+CND_ARTIFACT_PATH_Release_Pi=dist/Release_Pi/GNU-Linux/altipi
+CND_PACKAGE_DIR_Release_Pi=dist/Release_Pi/GNU-Linux/package
+CND_PACKAGE_NAME_Release_Pi=altipi.tar
+CND_PACKAGE_PATH_Release_Pi=dist/Release_Pi/GNU-Linux/package/altipi.tar
 #
 # include compiler specific variables
 #

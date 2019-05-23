@@ -31,7 +31,7 @@ DEFAULTCONF=Debug_Linux
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug_Linux Release Debug_Pi Debug_OSX 
+ALLCONFS=Debug_Linux Release Debug_Pi Debug_OSX Release_Pi 
 
 
 # build

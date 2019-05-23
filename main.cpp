@@ -147,7 +147,7 @@ int main(int argc, char** argv)
         if (argc > 3)
         {
             std::stringstream strstrm;
-            strstrm << argv[2] << "/" << outfile_debug_name;
+            strstrm << argv[3] << "/" << outfile_debug_name;
             outfile_debug_name = strstrm.str();
         }
 
