@@ -123,6 +123,7 @@ bool altimeter::processMessage(std::string serialmsg)
         {
               
               _last_altitude_m = distance_m;
+              _last_entry.distance_meters = distance_m;
         }
         
         // TODO(JK, Log distance seen here.)
@@ -154,7 +155,7 @@ bool altimeter::processMessage(std::string serialmsg)
     }
     
     // log the distance for debug reasons in a separate file.
-    if (_last_entry.distance_meters > 0)
+    if (_last_entry.distance_meters > -1)
     {
         log_altitude_entry(&_last_entry, _debug_file_path);
     }
