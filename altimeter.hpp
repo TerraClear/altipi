@@ -70,7 +70,8 @@ class altimeter
         };
         
          /* Strings representing communication commands over serial connection. */
-         const std::string   _Response_Distance = "?LD ";
+         const std::string   _Response_Distance = "?LD "; 
+         const std::string   _Response_Continuous_Mode = "#SU,1\r\n";
          const std::string   _Response_Info = "? SF11";
          
          const int           _Max_Number_Of_Kept_Altitudes = 10;

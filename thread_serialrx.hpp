@@ -52,7 +52,7 @@ class thread_serialrx : public terraclear::thread_base
         
         
         const uint32_t      _Serial_Timeout = 250;
-        const std::string   _Request_Continuous_Mode = "#SU,1";
+        const std::string   _Request_Continuous_Mode = "#SU,1\r\n";
         const std::string   _Request_Distance = "?LD\r\n";
         const std::string   _Request_Info = "?\r\n";
         

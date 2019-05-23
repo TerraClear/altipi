@@ -82,18 +82,18 @@ bool altimeter::processMessage(std::string serialmsg)
     // A message is a distance if it is preceeded by _Response_Distance or is a float.
     auto checkIfFloat = [this, serialmsg]() {
         try {
-             float distance_m = std::stof(
-                    serialmsg.substr(_Response_Distance.length(), 
-                     serialmsg.length() - _Response_Distance.length()));
+             float distance_m = std::stof(serialmsg.substr(1, serialmsg.length()));
         } catch (std::exception ex)
         {
             
             std::cout << "Error converting to float: " << ex.what();
             return false;
         }
+        return true;
     };
-    
-    if (serialmsg.substr(0, _Response_Info.length()) == _Response_Info)
+   
+    if (serialmsg.substr(0, _Response_Info.length()) == _Response_Info ||
+        (serialmsg.compare(_Response_Continuous_Mode) == 0))
     {
         //received info string, i.e. serial is good..
         std::cout << "Altimeter OK: " << serialmsg ;
@@ -101,10 +101,11 @@ bool altimeter::processMessage(std::string serialmsg)
         
     }
     //check if serial message is distance response or other..
-    else if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance 
-            || checkIfFloat()) {
+    else if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance ||
+             checkIfFloat() ){
         //convert to float
-        float distance_m = std::stof(serialmsg.substr(_Response_Distance.length(), serialmsg.length() - _Response_Distance.length()));
+
+        float distance_m = std::stof(serialmsg.substr(1, serialmsg.length()));
 
         if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
             // kick out oldest value
