@@ -43,7 +43,7 @@ void altimeter::create_altimeter_logfile(std::string filename)
 {
     //file header string..
     
-    std::string initstring = "#VERSION_0.04 - SEQUENCE,TIME_MS,DISTANCE\r\n";
+    std::string initstring = "#VERSION_0.05 - SEQUENCE,TIME_MS,DISTANCE\r\n";
 
     //create blank new file, overwriting any existing files
     std::ofstream outfile(filename);
@@ -79,6 +79,8 @@ float altimeter::last_altitude_m()
 
 bool altimeter::processMessage(std::string serialmsg)
 {
+
+  //std::cout << "Process message got " << serialmsg << std::endl;
     // A message is a distance if it is preceeded by _Response_Distance or is a float.
     auto checkIfFloat = [this, serialmsg]() {
         try {
@@ -93,7 +95,7 @@ bool altimeter::processMessage(std::string serialmsg)
     };
    
     if (serialmsg.substr(0, _Response_Info.length()) == _Response_Info ||
-        (serialmsg.compare(_Response_Continuous_Mode) == 0))
+        serialmsg.substr(0, _Response_Continuous_Mode.length()) == _Response_Continuous_Mode)
     {
         //received info string, i.e. serial is good..
         std::cout << "Altimeter OK: " << serialmsg ;
@@ -104,27 +106,57 @@ bool altimeter::processMessage(std::string serialmsg)
     else if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance ||
              checkIfFloat() ){
         //convert to float
-
-        float distance_m = std::stof(serialmsg.substr(1, serialmsg.length()));
-
-        if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
-            // kick out oldest value
-            _last_seen_altitudes.pop_back();
-        }
-        
-        // add altitude to last seen altitudes
-        _last_seen_altitudes.push_front(distance_m); 
-              
-        // If we have a full queue, sanity check value, if it is outside some number 
-        // of standard deviations, it is likely a bad reading.
-        // If we don't have a full queue, we are at the beginning of the flight and 
-        // need to build up our data.
-        if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
-                is_within_two_standard_deviations(distance_m))
+      
+        // if we requested the distance, convert the old way.
+        if (serialmsg.find(_Response_Distance) != std::string::npos )
         {
+            float distance_m = std::stof(
+	                    serialmsg.substr(_Response_Distance.length(), 
+	                     serialmsg.length() - _Response_Distance.length()));
+
+            if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
+                // kick out oldest value
+                _last_seen_altitudes.pop_back();
+            }
+        
+            // add altitude to last seen altitudes
+            _last_seen_altitudes.push_front(distance_m); 
               
-              _last_altitude_m = distance_m;
-              _last_entry.distance_meters = distance_m;
+            // If we have a full queue, sanity check value, if it is outside some number 
+            // of standard deviations, it is likely a bad reading.
+            // If we don't have a full queue, we are at the beginning of the flight and 
+            // need to build up our data.
+            if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
+                is_within_two_standard_deviations(distance_m))
+            {
+              
+                _last_altitude_m = distance_m;
+                _last_entry.distance_meters = distance_m;
+            }
+        }
+      
+        else {
+            float distance_m = std::stof(serialmsg.substr(1, serialmsg.length()));
+
+            if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
+                // kick out oldest value
+                _last_seen_altitudes.pop_back();
+            }
+        
+            // add altitude to last seen altitudes
+            _last_seen_altitudes.push_front(distance_m); 
+              
+            // If we have a full queue, sanity check value, if it is outside some number 
+            // of standard deviations, it is likely a bad reading.
+            // If we don't have a full queue, we are at the beginning of the flight and 
+            // need to build up our data.
+            if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
+                is_within_two_standard_deviations(distance_m))
+            {
+              
+                _last_altitude_m = distance_m;
+                _last_entry.distance_meters = distance_m;
+            }
         }
         
         // TODO(JK, Log distance seen here.)
