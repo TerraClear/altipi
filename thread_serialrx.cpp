@@ -29,8 +29,8 @@ thread_serialrx::thread_serialrx(altimeter* p_altimeter,
         _p_altimeter = p_altimeter;
         //request altimeter info
         
-        _serial1.writeString(_Request_Continuous_Mode, _Serial_Timeout);
         _serial1.writeString(_Request_Info, _Serial_Timeout);
+        _serial1.writeString(_Request_Continuous_Mode, _Serial_Timeout);
 }
 
 thread_serialrx::~thread_serialrx() 

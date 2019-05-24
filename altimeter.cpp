@@ -43,7 +43,7 @@ void altimeter::create_altimeter_logfile(std::string filename)
 {
     //file header string..
     
-    std::string initstring = "#VERSION_0.03 - SEQUENCE,TIME_MS,DISTANCE\r\n";
+    std::string initstring = "#VERSION_0.04 - SEQUENCE,TIME_MS,DISTANCE\r\n";
 
     //create blank new file, overwriting any existing files
     std::ofstream outfile(filename);

@@ -144,15 +144,15 @@ int main(int argc, char** argv)
             outfile_name = strstrm.str();
         }
         
-        if (argc > 3)
-        {
-            std::stringstream strstrm;
-            strstrm << argv[3] << "/" << outfile_debug_name;
-            outfile_debug_name = strstrm.str();
-        }
+        // if (argc > 3)
+        // {
+        //     std::stringstream strstrm;
+        //     strstrm << argv[3] << "/" << outfile_debug_name;
+        //     outfile_debug_name = strstrm.str();
+        // }
 
         std::string outfile_full = generate_filename(outfile_name, outfile_ext);
-        std::string outfile_debug_full = generate_filename(outfile_debug_name, outfile_ext);
+        std::string outfile_debug_full = generate_filename(outfile_name + "debug", outfile_ext);
 
         //create altimeter
         altimeter* pAltimeter = new altimeter(outfile_full, outfile_debug_full);
