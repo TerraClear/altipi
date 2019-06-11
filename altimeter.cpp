@@ -18,7 +18,7 @@
  */
 
 #include <vector>
-
+#include <regex>
 #include "altimeter.hpp"
 
 altimeter::altimeter(std::string filepath, std::string debug_filepath) 
@@ -43,7 +43,7 @@ void altimeter::create_altimeter_logfile(std::string filename)
 {
     //file header string..
     
-    std::string initstring = "#VERSION_0.05 - SEQUENCE,TIME_MS,DISTANCE\r\n";
+    std::string initstring = "#VERSION_0.06 - SEQUENCE,TIME_MS,DISTANCE\r\n";
 
     //create blank new file, overwriting any existing files
     std::ofstream outfile(filename);
@@ -138,24 +138,28 @@ bool altimeter::processMessage(std::string serialmsg)
         else {
             float distance_m = std::stof(serialmsg.substr(1, serialmsg.length()));
 
-            if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
-                // kick out oldest value
-                _last_seen_altitudes.pop_back();
-            }
+            // Only use positive distances to log altitude.  We
+            if (distance_m > 0) {
+             
+                if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
+                    // kick out oldest value
+                    _last_seen_altitudes.pop_back();
+                }
         
-            // add altitude to last seen altitudes
-            _last_seen_altitudes.push_front(distance_m); 
+                // add altitude to last seen altitudes
+                _last_seen_altitudes.push_front(distance_m); 
               
-            // If we have a full queue, sanity check value, if it is outside some number 
-            // of standard deviations, it is likely a bad reading.
-            // If we don't have a full queue, we are at the beginning of the flight and 
-            // need to build up our data.
-            if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
-                is_within_two_standard_deviations(distance_m))
-            {
+                // If we have a full queue, sanity check value, if it is outside some number 
+                // of standard deviations, it is likely a bad reading.
+                // If we don't have a full queue, we are at the beginning of the flight and 
+                // need to build up our data.
+                if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
+                    is_within_two_standard_deviations(distance_m))
+                {
               
-                _last_altitude_m = distance_m;
-                _last_entry.distance_meters = distance_m;
+                    _last_altitude_m = distance_m;
+                    _last_entry.distance_meters = distance_m;
+                }
             }
         }
         
@@ -186,12 +190,10 @@ bool altimeter::processMessage(std::string serialmsg)
         
         _last_entry = entry;
     }
+
+    // always log to the debug file
+    log_altitude_entry(&_last_entry, _debug_file_path);
     
-    // log the distance for debug reasons in a separate file.
-    if (_last_entry.distance_meters > -1)
-    {
-        log_altitude_entry(&_last_entry, _debug_file_path);
-    }
     return true;
 }
         
