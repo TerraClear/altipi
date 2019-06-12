@@ -43,7 +43,7 @@ void altimeter::create_altimeter_logfile(std::string filename)
 {
     //file header string..
     
-    std::string initstring = "#VERSION_0.06 - SEQUENCE,TIME_MS,DISTANCE\r\n";
+    std::string initstring = "#VERSION_0.07 - SEQUENCE,TIME_MS,DISTANCE\r\n";
 
     //create blank new file, overwriting any existing files
     std::ofstream outfile(filename);
@@ -106,14 +106,22 @@ bool altimeter::processMessage(std::string serialmsg)
     else if (serialmsg.substr(0, _Response_Distance.length()) == _Response_Distance ||
              checkIfFloat() ){
         //convert to float
+      float distance_m = 0.0;
+      
       
         // if we requested the distance, convert the old way.
         if (serialmsg.find(_Response_Distance) != std::string::npos )
         {
-            float distance_m = std::stof(
+            distance_m = std::stof(
 	                    serialmsg.substr(_Response_Distance.length(), 
 	                     serialmsg.length() - _Response_Distance.length()));
-
+        } else {
+            distance_m = std::stof(serialmsg.substr(1, serialmsg.length()));
+        }
+        
+        // Only use positive distances to log altitude.
+        if (distance_m > 0) {
+             
             if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
                 // kick out oldest value
                 _last_seen_altitudes.pop_back();
@@ -133,37 +141,13 @@ bool altimeter::processMessage(std::string serialmsg)
                 _last_altitude_m = distance_m;
                 _last_entry.distance_meters = distance_m;
             }
-        }
-      
-        else {
-            float distance_m = std::stof(serialmsg.substr(1, serialmsg.length()));
+        } else {
 
-            // Only use positive distances to log altitude.  We
-            if (distance_m > 0) {
-             
-                if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
-                    // kick out oldest value
-                    _last_seen_altitudes.pop_back();
-                }
-        
-                // add altitude to last seen altitudes
-                _last_seen_altitudes.push_front(distance_m); 
-              
-                // If we have a full queue, sanity check value, if it is outside some number 
-                // of standard deviations, it is likely a bad reading.
-                // If we don't have a full queue, we are at the beginning of the flight and 
-                // need to build up our data.
-                if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes || 
-                    is_within_two_standard_deviations(distance_m))
-                {
-              
-                    _last_altitude_m = distance_m;
-                    _last_entry.distance_meters = distance_m;
-                }
-            }
+            // Log negative distance seen here.
+            std::ostringstream ss;
+            ss << "Not using negative value: " << distance_m;
+            this->append_to_log(this->_debug_file_path, ss.str());
         }
-        
-        // TODO(JK, Log distance seen here.)
     }
     else
     {
