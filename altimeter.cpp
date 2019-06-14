@@ -43,7 +43,7 @@ void altimeter::create_altimeter_logfile(std::string filename)
 {
     //file header string..
     
-    std::string initstring = "#VERSION_0.08 - SEQUENCE,TIME_MS,DISTANCE\r\n";
+    std::string initstring = "#VERSION_0.09 - SEQUENCE,TIME_MS,DISTANCE\r\n";
 
     //create blank new file, overwriting any existing files
     std::ofstream outfile(filename);
@@ -120,35 +120,36 @@ bool altimeter::processMessage(std::string serialmsg)
         }
         
         // Only use positive distances to log altitude.
-        if (distance_m > 0) {
+        // 130.00 is sent when the reading is out of range, so don't use that.
+        if (distance_m > 0 && distance_m < 130.00) {
              
             if (_last_seen_altitudes.size() > _Max_Number_Of_Kept_Altitudes) {
                 // kick out oldest value
                 _last_seen_altitudes.pop_back();
             }
         
-            // If we don't have a full queue, we are at the beginning of the flight and 
-            // need to build up our data.
-            if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes ) {
+            // add altitude to last seen altitudes
+            _last_seen_altitudes.push_front(distance_m); 
 
-                // add altitude to last seen altitudes
-                _last_seen_altitudes.push_front(distance_m); 
-            }
-            else if ( is_within_two_standard_deviations(distance_m)) {
-              // add altitude to last seen altitudes
-              _last_seen_altitudes.push_front(distance_m); 
-              _last_altitude_m = this->get_mean_altitude();
-              _last_entry.distance_meters = this->get_mean_altitude();;
+
+            // If we don't have a full queue, we are at the beginning of the flight and 
+            // need to build up our data.  And if value is outside of two standard
+            // deviations, be cautious and don't report the value yet.
+            if (_last_seen_altitudes.size() < _Max_Number_Of_Kept_Altitudes
+                || this->is_within_two_standard_deviations(distance_m)) {
+              _last_altitude_m = distance_m;
+              _last_entry.distance_meters = distance_m;
             } else {
-                // Log outside distance seen here.
+
+                // Log negative distance or too big distance seen here.
                 std::ostringstream ss;
-                ss << "Not using value outside 2 standard deviations of mean: "
-                   << distance_m << "\n";
+                ss << "Not using value outside 2 standard deviations: " << distance_m << "\n";
                 this->append_to_log(this->_debug_file_path, ss.str());
             }
+            
         } else {
 
-            // Log negative distance seen here.
+            // Log negative distance or too big distance seen here.
             std::ostringstream ss;
             ss << "Not using negative value: " << distance_m << "\n";
             this->append_to_log(this->_debug_file_path, ss.str());
@@ -255,8 +256,6 @@ bool altimeter::is_within_two_standard_deviations(float latest_altitude) {
     float sq_sum = std::inner_product(diff.begin(), diff.end(), diff.begin(), 0.0);
     float stdev = std::sqrt(sq_sum / _last_seen_altitudes.size());
     
-    //std::cout << "mean = " << mean << " and stdev = " << stdev << std::endl;
-    
     
     /* This is some math that checks if the stdev is 0.  We have to use
        an epsilon to check because we are dealing with imprecise floating
@@ -273,7 +272,6 @@ bool altimeter::is_within_two_standard_deviations(float latest_altitude) {
     if (checkIfStdevNearZero())
     {
         // latest altitude is within one standard deviation of previous values.
-        //std::cout << "Usable altitude" << std::endl;
         return true; // All our numbers are the same.
     }
     
@@ -282,11 +280,9 @@ bool altimeter::is_within_two_standard_deviations(float latest_altitude) {
             latest_altitude >= (mean - 2*stdev) )
     {
         // latest altitude is within one standard deviation of previous values.
-        //std::cout << "Usable altitude" << std::endl;
         return true;
     }
     
-        // latest altitude is within one standard deviation of previous values.
-        //std::cout << "THROWING OUT ALTITUDE " << latest_altitude << std::endl;
+        // latest altitude is within one standard deviation of previous values.  
     return false;
 }

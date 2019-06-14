@@ -31,6 +31,8 @@ thread_serialrx::thread_serialrx(altimeter* p_altimeter,
         
         _serial1.writeString(_Request_Info, _Serial_Timeout);
         _serial1.writeString(_Request_Continuous_Mode, _Serial_Timeout);
+        _serial1.writeString(_Request_Median_Filter_On, _Serial_Timeout);
+        _serial1.writeString(_Request_Median_Filter_Use_20_Values, _Serial_Timeout);
 }
 
 thread_serialrx::~thread_serialrx() 
